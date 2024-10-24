@@ -1,0 +1,12 @@
+{
+    "/_framework/*": {
+        "target": "http://localhost:5242",
+        "secure": false,
+        "changeOrigin": true
+    },
+    "/_content/**": {
+        "target": "http://localhost:5242",
+        "secure": false,
+        "changeOrigin": true
+    }
+}

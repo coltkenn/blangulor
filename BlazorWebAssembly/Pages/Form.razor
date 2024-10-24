@@ -1,0 +1,57 @@
+@page "/form"
+@inject IJSRuntime JS
+
+<PageTitle>Form</PageTitle>
+
+<h1>Form</h1>
+
+<form>
+    <mat-form-field>
+        <mat-label>Input</mat-label>
+        @* @bind:event="oninput" enables two way data-binding *@
+        <input matInput @bind:event="oninput" @bind="InputValue" />
+    </mat-form-field>
+
+    @* type="button" prevents page reload *@
+    <button
+        class="btn btn-primary"
+        @onclick="@(() => InvokeAngularFunction(_sayHello))"
+        type="button"
+    >
+        Talk to Blazor
+    </button>
+    @* type="button" prevents page reload *@
+    <button
+        class="btn btn-primary"
+        @onclick="@(() => InvokeAngularFunction(_sendMessageToParent))"
+        type="button"
+    >
+        Talk to Parent
+    </button>
+</form>
+
+<p>
+    Input value: @InputValue
+</p>
+
+@code {
+    private string? InputValue { get; set; }
+    private readonly string _sayHello = "sayHello";
+    private readonly string _sendMessageToParent = "sendMessageToParent";
+    private class FunctionData
+    {
+        public string message { get; set; } = "Hello From Blazor!";
+    };
+
+    private async Task InvokeAngularFunction(string method)
+    {
+        var data = new FunctionData();
+        await JS.InvokeVoidAsync(method, data);
+    }
+
+    [JSInvokable("BlazorFunction")]
+    public static void BlazorFunction(string message)
+    {
+        Console.WriteLine(message); // See output in browser console.
+    }
+}
